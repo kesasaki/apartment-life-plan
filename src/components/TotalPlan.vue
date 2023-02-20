@@ -7,13 +7,29 @@
       <li><a href="#" target="_blank" rel="noopener">item1</a></li>
       <li><a href="#" target="_blank" rel="noopener">item1</a></li>
     </ul>
+    <BarChart :chartData="dat1" :chartOptions="dat2" />
   </div>
 </template>
 
 <script>
+import BarChart from './BarChart.vue';
 export default {
   name: 'totalPlan',
+  components: {
+    BarChart
+  },
   props: {
+  },
+  data () {
+    return {
+      dat1: {
+        labels: [ 'January', 'February', 'March' ],
+        datasets: [ { data: [40, 20, 12] } ]
+      },
+      dat2: {
+        responsive: true
+      }
+    }
   }
 }
 </script>
