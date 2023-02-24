@@ -13,6 +13,8 @@
 
 <script>
 import BarChart from './BarChart.vue';
+import Lib from '../lib/lib.js';
+const years = Lib.getYearsArray(2022, 2060);
 export default {
   name: 'totalPlan',
   components: {
@@ -23,8 +25,8 @@ export default {
   data () {
     return {
       dat1: {
-        labels: [ 'January', 'February', 'March' ],
-        datasets: [ { data: [40, 20, 12] } ]
+        labels: years,
+        datasets: [ { data: [40, 20, 12, 12] } ]
       },
       dat2: {
         responsive: true
