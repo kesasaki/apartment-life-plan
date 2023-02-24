@@ -3,6 +3,7 @@
   <HelloWorld msg="Welcome to My Vue.js App"/>
   <TotalPlan/>
   <ItemPlan itemName="仮設工事"/>
+  <!--
   <ItemPlan itemName="屋上防水"/>
   <ItemPlan itemName="床防水"/>
   <ItemPlan itemName="外壁塗装等"/>
@@ -21,6 +22,7 @@
   <ItemPlan itemName="外構・付属施設"/>
   <ItemPlan itemName="調査・診断、設計、工事管理等費用"/>
   <ItemPlan itemName="長期修繕計画作成費用"/>
+  -->
 </template>
 
 <script>
