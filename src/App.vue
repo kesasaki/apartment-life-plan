@@ -1,9 +1,10 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to My Vue.js App"/>
   <TotalPlan/>
-  <ItemPlan itemName="仮設工事"/>
+  <ItemPlan itemName="修繕積立金 / 年" defaultPrice=290000 defaultInterval=1 defaultPrev=0 />
+  <ItemPlan itemName="大規模修繕" defaultPrice=200000 defaultInterval=15 defaultPrev=0 />
+  <ItemPlan itemName="大規模修繕以外の積立金利用" defaultPrice=190000 defaultInterval=1 defaultPrev=0 />
   <!--
+  <ItemPlan itemName="仮設工事"/>
   <ItemPlan itemName="屋上防水"/>
   <ItemPlan itemName="床防水"/>
   <ItemPlan itemName="外壁塗装等"/>
@@ -26,17 +27,16 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import ItemPlan from './components/ItemPlan.vue'
 import TotalPlan from './components/TotalPlan.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
     ItemPlan,
     TotalPlan
   }
+
 }
 </script>
 
