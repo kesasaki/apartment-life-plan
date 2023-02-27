@@ -4,11 +4,11 @@
     <BarChart :chartData="getYearlyCosts" :chartOptions="dat2" />
     <div>
       <label for="volume">費用</label>
-      <input type="range" min="10000" max="300000" step="10000" list="tickmarksPrice" v-model.number="price">
+      <input type="range" min="10000" max="400000" step="10000" list="tickmarksPrice" v-model.number="price">
     </div>
     <div>
       <label for="volume">間隔</label>
-      <input type="range" min="10" max="20" step="1" list="tickmarksInterval" v-model.number="interval">
+      <input type="range" min="1" max="30" step="1" list="tickmarksInterval" v-model.number="interval">
     </div>
     <div>
       <label for="volume">前回実施年度</label>
@@ -26,7 +26,10 @@ export default {
     BarChart
   },
   props: {
-    itemName: String
+    itemName: String,
+    defaultPrice: Number,
+    defaultInterval: Number,
+    defaultPrev: Number
   },
   data () {
     return {
@@ -34,9 +37,9 @@ export default {
         responsive: true,
         animation: false,
       },
-      price: 200000,
-      interval: 15,
-      prev: 5,
+      price: this.defaultPrice,       // 10000 ~ 400000
+      interval: this.defaultInterval, // 10 ~ 20
+      prev: this.defaultPrev,         // 0 ~ 30
     }
   },
   computed: {
