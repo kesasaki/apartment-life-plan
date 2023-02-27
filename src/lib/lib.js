@@ -33,9 +33,8 @@ function getYearlyCostsArray(start, end, cost, inteval, prev) {
     }
     var years = [];
     for (var i = start; i <= end; i++) {
-        years.push((i + prev) % inteval == 0 ? cost : 0);
+        years.push((i - prev) % inteval == 0 ? cost : 0);
     }
-    console.log(years);
     return years;
 }
 // 関数をエクスポートします。
