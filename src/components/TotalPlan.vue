@@ -3,24 +3,29 @@
     <h1>長期修繕計画 全体像</h1>
     <BarChart :chartData="getYearlyCosts" :chartOptions="dat2" />
     <div>
-      <label for="volume">修繕積立金合計/年</label>
-      <input type="range" min="0" max="60000" step="1000" list="tickmarksIncomePrice" v-model.number="incomeprice">
+      <label for="volume">初年度の積立金残高</label>
+      <input type="range" min="10000" max="400000" step="10000"  list="firstValue" v-model.number="firstvalue">
+      {{ firstvalue / 100000 }}億円
     </div>
     <div>
-      <label for="volume">大規模修繕の間隔</label>
-      <input type="range" min="1" max="30" step="1" list="tickmarksOutgoInterval" v-model.number="outgointerval">
+      <label for="volume">毎年の修繕積立金合計</label>
+      <input type="range" min="0" max="60000" step="1000" list="tickmarksIncomePrice" v-model.number="incomeprice">
+      {{ incomeprice / 10}} 万円
     </div>
     <div>
       <label for="volume">大規模修繕の金額</label>
       <input type="range" min="10000" max="400000" step="10000" list="tickmarksOutgoPrice1" v-model.number="outgoprice1">
+      {{ outgoprice1 / 100000 }}億円
     </div>
     <div>
-      <label for="volume">恒常的にかかる修繕費の金額</label>
+      <label for="volume">大規模修繕の間隔</label>
+      <input type="range" min="1" max="30" step="1" list="tickmarksOutgoInterval" v-model.number="outgointerval">
+      {{ outgointerval }}年毎
+    </div>
+    <div>
+      <label for="volume">毎年の修繕費の金額</label>
       <input type="range" min="10000" max="20000" step="1000"  list="tickmarksOutgoPrice2" v-model.number="outgoprice2">
-    </div>
-    <div>
-      <label for="volume">初年度の残高</label>
-      <input type="range" min="10000" max="400000" step="10000"  list="firstValue" v-model.number="firstvalue">
+      {{ outgoprice2 / 10 }}万円
     </div>
   </div>
 </template>
@@ -84,5 +89,9 @@ li {
 }
 a {
   color: #42b983;
+}
+input[type="range"] {
+  width: 400px;
+  margin: 0;
 }
 </style>

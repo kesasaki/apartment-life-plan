@@ -5,14 +5,17 @@
     <div>
       <label for="volume">費用</label>
       <input type="range" min="10000" max="400000" step="10000" list="tickmarksPrice" v-model.number="price">
+      {{ price / 10 }}万円
     </div>
     <div>
       <label for="volume">間隔</label>
       <input type="range" min="1" max="30" step="1" list="tickmarksInterval" v-model.number="interval">
+      {{ interval }}年毎
     </div>
     <div>
-      <label for="volume">前回実施年度</label>
+      <label for="volume">前回実施</label>
       <input type="range" min="0" max="30" step="1" list="tickmarksPrev" v-model.number="prev">
+      {{ prev }}年前
     </div>
   </div>
 </template>
@@ -27,9 +30,9 @@ export default {
   },
   props: {
     itemName: String,
-    defaultPrice: Number,
-    defaultInterval: Number,
-    defaultPrev: Number
+    defaultPrice: String,
+    defaultInterval: String,
+    defaultPrev: String
   },
   data () {
     return {
@@ -37,9 +40,9 @@ export default {
         responsive: true,
         animation: false,
       },
-      price: this.defaultPrice,       // 10000 ~ 400000
-      interval: this.defaultInterval, // 10 ~ 20
-      prev: this.defaultPrev,         // 0 ~ 30
+      price: Number(this.defaultPrice),       // 10000 ~ 400000
+      interval: Number(this.defaultInterval), // 10 ~ 20
+      prev: Number(this.defaultPrev),         // 0 ~ 30
     }
   },
   computed: {
