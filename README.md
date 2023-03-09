@@ -1,24 +1,26 @@
 # apartmentlifeplan
 
-## Project setup
+## セットアップ
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Webサーバ開始 & 自動リビルド反映
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### ビルド
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### リント
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### TypeScriptの自動コンパイル
+```
+npx tsc *.ts --watch
+```
