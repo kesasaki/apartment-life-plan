@@ -1,5 +1,5 @@
 <template>
-  <TotalPlan/>
+  <TotalPlan incomePriceDefault="29000" outgoIntervalDefault="15" outgoPrice1Default="200000" outgoPrice2Default="12000" firstValueDefault="200000" />
   <ItemPlan itemName="修繕積立金 / 年" defaultPrice=290000 defaultInterval=1 defaultPrev=0 />
   <ItemPlan itemName="大規模修繕" defaultPrice=200000 defaultInterval=15 defaultPrev=0 />
   <ItemPlan itemName="大規模修繕以外の積立金利用" defaultPrice=190000 defaultInterval=1 defaultPrev=0 />

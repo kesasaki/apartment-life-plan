@@ -37,8 +37,72 @@ function getYearlyCostsArray(start, end, cost, inteval, prev) {
     }
     return years;
 }
+/**
+ * 金額配列の足し算(arr1 + arr2)
+ *
+ * @param start 開始年
+ * @param end 終了年
+ * @param arr1
+ * @param arr2
+ * @returns
+ */
+function getAddedArray(start, end, arr1, arr2) {
+    if (start > end) {
+        return [];
+    }
+    var years = [];
+    var span = end - start;
+    for (var i = 0; i <= span; i++) {
+        years.push(arr1[i] + arr2[i]);
+    }
+    return years;
+}
+/**
+ * 金額配列の引き算(arr1 - arr2)
+ *
+ * @param start 開始年
+ * @param end 終了年
+ * @param arr1
+ * @param arr2
+ * @returns
+ */
+function getSubedArray(start, end, arr1, arr2) {
+    if (start > end) {
+        return [];
+    }
+    var years = [];
+    var span = end - start;
+    for (var i = 0; i <= span; i++) {
+        years.push(arr1[i] - arr2[i]);
+    }
+    return years;
+}
+/**
+ * 残高推移を取得する
+ *
+ * @param start 開始年
+ * @param end 終了年
+ * @param costArr 予算
+ * @param firstValue 初期値
+ * @returns
+ */
+function getBalanceArray(start, end, costArr, firstValue) {
+    if (start > end) {
+        return [];
+    }
+    var years = [];
+    var span = end - start;
+    years.push(firstValue);
+    for (var i = 1; i <= span; i++) {
+        years.push(years[i - 1] + costArr[i]);
+    }
+    return years;
+}
 // 関数をエクスポートします。
 exports["default"] = {
     getYearsArray: getYearsArray,
-    getYearlyCostsArray: getYearlyCostsArray
+    getYearlyCostsArray: getYearlyCostsArray,
+    getAddedArray: getAddedArray,
+    getSubedArray: getSubedArray,
+    getBalanceArray: getBalanceArray
 };
