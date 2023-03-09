@@ -27,9 +27,9 @@ export default {
   },
   props: {
     itemName: String,
-    defaultPrice: Number,
-    defaultInterval: Number,
-    defaultPrev: Number
+    defaultPrice: String,
+    defaultInterval: String,
+    defaultPrev: String
   },
   data () {
     return {
@@ -37,9 +37,9 @@ export default {
         responsive: true,
         animation: false,
       },
-      price: this.defaultPrice,       // 10000 ~ 400000
-      interval: this.defaultInterval, // 10 ~ 20
-      prev: this.defaultPrev,         // 0 ~ 30
+      price: Number(this.defaultPrice),       // 10000 ~ 400000
+      interval: Number(this.defaultInterval), // 10 ~ 20
+      prev: Number(this.defaultPrev),         // 0 ~ 30
     }
   },
   computed: {
