@@ -8,9 +8,18 @@
       {{ firstvalue / 100000 }}億円
     </div>
     <div>
-      <label for="volume">毎年の修繕積立金合計</label>
-      <input type="range" min="0" max="60000" step="1000" list="tickmarksIncomePrice" v-model.number="incomeprice">
-      {{ incomeprice / 10}} 万円
+      <label for="volume">毎月の修繕積立金</label>
+      <input type="range" min="0" max="50000" step="500" list="tickmarksRepareDepositMonthlye" v-model.number="reparedepositmonthly">
+      {{ reparedepositmonthly }}円/戸*月
+    </div>
+    <div>
+      <label for="volume">戸数</label>
+      <input type="range" min="2" max="2789" step="1" list="tickmarksNumberHouses" v-model.number="numberhouses">
+      {{ numberhouses}}戸
+    </div>
+    <div>
+      <label for="volume">毎月の修繕積立金</label>
+      {{ getIncomeYealy / 10000 }}万円/年
     </div>
     <div>
       <label for="volume">大規模修繕の金額</label>
@@ -39,7 +48,8 @@ export default {
     BarChart
   },
   props: {
-    incomePriceDefault: String,
+    repareDepositMonthlyDefault: String,
+    numberhousesDefault: String,
     outgoIntervalDefault: String,
     outgoPrice1Default: String,
     outgoPrice2Default: String,
@@ -51,7 +61,8 @@ export default {
         responsive: true,
         animation: false,
       },
-      incomeprice: Number(this.incomePriceDefault),       // 10000 ~ 400000
+      reparedepositmonthly: Number(this.repareDepositMonthlyDefault),       // 0 ~ 500000
+      numberhouses: Number(this.numberhousesDefault),       // 2 ~ 2789
       outgointerval: Number(this.outgoIntervalDefault), // 10 ~ 20
       outgoprice1: Number(this.outgoPrice1Default),
       outgoprice2: Number(this.outgoPrice2Default),
@@ -59,8 +70,11 @@ export default {
     }
   },
   computed: {
+    getIncomeYealy: function() {
+      return this.reparedepositmonthly * 12 * this.numberhouses
+    },
     getYearlyCosts: function () {
-      var incomeArray = Lib.getYearlyCostsArray(2022, 2060, this.incomeprice, 1, 0);
+      var incomeArray = Lib.getYearlyCostsArray(2022, 2060, this.getIncomeYealy / 1000, 1, 0);
       var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.outgoprice1, this.outgointerval, 0);
       var outgoArray2 = Lib.getYearlyCostsArray(2022, 2060, this.outgoprice2, 1, 0);
       var outgoArray = Lib.getAddedArray(2022, 2060, outgoArray1, outgoArray2);
