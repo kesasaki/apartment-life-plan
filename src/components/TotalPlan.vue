@@ -18,7 +18,7 @@
       {{ numberhouses}}戸
     </div>
     <div>
-      <label for="volume">毎月の修繕積立金</label>
+      <label for="volume">毎年の修繕積立金の全戸合計</label>
       {{ getIncomeYealy / 10000 }}万円/年
     </div>
     <div>
