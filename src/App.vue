@@ -1,5 +1,13 @@
 <template>
-  <TotalPlan repareDepositMonthlyDefault="19000" numberhousesDefault="130" outgoIntervalDefault="15" outgoPrice1Default="200000" outgoPrice2Default="12000" firstValueDefault="200000" />
+  <TotalPlan
+    repareDepositMonthlyDefault="19000"
+    numberhousesDefault="130"
+    outgoIntervalDefault="15"
+    constructionPricePerAreaDefault="15000"
+    roomAreaAveDefault="80"
+    outgoPrice2Default="12000"
+    firstValueDefault="200000"
+  />
   <ItemPlan itemName="修繕積立金 / 年" defaultPrice="29000" defaultInterval="1" defaultPrev="0" />
   <ItemPlan itemName="大規模修繕" defaultPrice="200000" defaultInterval="15" defaultPrev="0" />
   <ItemPlan itemName="大規模修繕以外の積立金利用" defaultPrice="19000" defaultInterval="1" defaultPrev="0" />

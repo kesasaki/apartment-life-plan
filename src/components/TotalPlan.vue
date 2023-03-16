@@ -22,9 +22,26 @@
       {{ getIncomeYealy / 10000 }}万円/年
     </div>
     <div>
-      <label for="volume">大規模修繕の金額</label>
-      <input type="range" min="10000" max="400000" step="10000" list="tickmarksOutgoPrice1" v-model.number="outgoprice1">
-      {{ outgoprice1 / 100000 }}億円
+      <label for="volume">床面積あたりの工事金額</label>
+      <input type="range" min="3000" max="30000" step="100" list="tickmarksConstructionPricePerArea" v-model.number="constructionpriceperarea">
+      {{ constructionpriceperarea / 10000}}万円/㎡
+    </div>
+    <div>
+      <label for="volume">部屋面積の平均</label>
+      <input type="range" min="5" max="200" step="1" list="tickmarksRoomAreaAve" v-model.number="roomareaave">
+      {{ roomareaave }}㎡
+    </div>
+    <div>
+      <label for="volume">分譲延べ床面積（部屋面積平均 * 戸数）</label>
+      {{ getRoomAreaTotal }}㎡
+    </div>
+    <div>
+      <label for="volume">建物延べ床部屋面積（分譲延べ床面積 / 0.75）</label>
+      {{ getBuildingAreaTotal }}㎡
+    </div>
+    <div>
+      <label for="volume">大規模修繕の金額(建物延べ床部屋面積 * 床面積あたりの工事金額)</label>
+      {{ getConstructionPrice / 100000000 }}億円
     </div>
     <div>
       <label for="volume">大規模修繕の間隔</label>
@@ -51,7 +68,8 @@ export default {
     repareDepositMonthlyDefault: String,
     numberhousesDefault: String,
     outgoIntervalDefault: String,
-    outgoPrice1Default: String,
+    constructionPricePerAreaDefault: String,
+    roomAreaAveDefault: String,
     outgoPrice2Default: String,
     firstValueDefault: String
   },
@@ -64,7 +82,8 @@ export default {
       reparedepositmonthly: Number(this.repareDepositMonthlyDefault),       // 0 ~ 500000
       numberhouses: Number(this.numberhousesDefault),       // 2 ~ 2789
       outgointerval: Number(this.outgoIntervalDefault), // 10 ~ 20
-      outgoprice1: Number(this.outgoPrice1Default),
+      constructionpriceperarea: Number(this.constructionPricePerAreaDefault),
+      roomareaave: Number(this.roomAreaAveDefault),
       outgoprice2: Number(this.outgoPrice2Default),
       firstvalue: Number(this.firstValueDefault),
     }
@@ -73,9 +92,18 @@ export default {
     getIncomeYealy: function() {
       return this.reparedepositmonthly * 12 * this.numberhouses
     },
+    getRoomAreaTotal: function() {
+      return this.roomareaave * this.numberhouses
+    },
+    getBuildingAreaTotal: function() {
+      return Math.round(this.getRoomAreaTotal / 0.75)
+    },
+    getConstructionPrice: function() {
+      return this.getBuildingAreaTotal * this.constructionpriceperarea;
+    },
     getYearlyCosts: function () {
       var incomeArray = Lib.getYearlyCostsArray(2022, 2060, this.getIncomeYealy / 1000, 1, 0);
-      var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.outgoprice1, this.outgointerval, 0);
+      var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getConstructionPrice / 1000, this.outgointerval, 0);
       var outgoArray2 = Lib.getYearlyCostsArray(2022, 2060, this.outgoprice2, 1, 0);
       var outgoArray = Lib.getAddedArray(2022, 2060, outgoArray1, outgoArray2);
       var years = Lib.getSubedArray(2022, 2060, incomeArray, outgoArray);
