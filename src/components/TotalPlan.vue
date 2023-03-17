@@ -147,6 +147,10 @@ export default {
     getConstructionPrice: function() {
       return this.getBuildingAreaTotal * this.constructionpriceperarea;
     },
+    // 大規模修繕の金額の平均値
+    getConstructionPriceAve: function() {
+      return this.getBuildingAreaTotal * 15000;
+    },
     // 月額の積立金平均
     getRepareReserveAve: function() {
       // ロジック参考
@@ -175,7 +179,7 @@ export default {
     },
     // 大規模修繕の上記回数の合計金額
     getTotalPriceLargeConstruction: function() {
-      return this.getCountLargeConstruction * this.getConstructionPrice
+      return this.getCountLargeConstruction * this.getConstructionPriceAve
     },
     // 大規模修繕費を除いた修繕費の合計金額
     getTotalPriceWithoutLargeConstruction: function() {
