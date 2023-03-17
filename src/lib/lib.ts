@@ -31,7 +31,7 @@ function getYearlyCostsArray(start: number, end: number, cost: number, inteval: 
         return []
     }
     let years = [];
-    for (let i = start; i <= end; i++) {
+    for (let i = 0; i < end - start; i++) {
         years.push((i - prev)%inteval == 0 ? cost : 0);
     }
     return years
