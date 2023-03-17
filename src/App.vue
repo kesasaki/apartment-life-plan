@@ -8,6 +8,7 @@
     floorsDefault="7"
     firstValueDefault="200000"
     temporaryMoneyDefault="0"
+    nextConstructionDefault="2"
   />
   <ItemPlan itemName="修繕積立金 / 年" defaultPrice="29000" defaultInterval="1" defaultPrev="0" />
   <ItemPlan itemName="大規模修繕" defaultPrice="200000" defaultInterval="15" defaultPrev="0" />
