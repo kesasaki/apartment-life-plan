@@ -9,8 +9,8 @@
     </div>
     <div>
       <label for="volume">毎月の修繕積立金</label>
-      <input type="range" min="0" max="50000" step="500" list="tickmarksRepareDepositMonthlye" v-model.number="reparedepositmonthly">
-      {{ reparedepositmonthly }}円/戸*月
+      <input type="range" min="0" max="50000" step="500" list="tickmarksRepareReserveMonthlye" v-model.number="reparereservemonthly">
+      {{ reparereservemonthly }}円/戸*月
     </div>
     <div>
       <label for="volume">戸数</label>
@@ -49,9 +49,33 @@
       {{ outgointerval }}年毎
     </div>
     <div>
-      <label for="volume">毎年の修繕費の金額</label>
-      <input type="range" min="10000" max="20000" step="1000"  list="tickmarksOutgoPrice2" v-model.number="outgoprice2">
-      {{ outgoprice2 / 10 }}万円
+      <label for="volume">階数</label>
+      <input type="range" min="1" max="60" step="1"  list="tickmarksFloors" v-model.number="floors">
+      {{ floors }}階建て
+    </div>
+    <div>
+      <label for="volume">毎月の修繕積立金目安(修繕費計算用)</label>
+      {{ getRepareReserveAve }}円/㎡*月
+    </div>
+    <div>
+      <label for="volume">長期修繕計画の合計金額</label>
+      {{ getLongPlanTotalPrice / 100000000 }}億円
+    </div>
+    <div>
+      <label for="volume">期間中の大規模修繕の回数</label>
+      {{ getCountLargeConstruction }}回
+    </div>
+    <div>
+      <label for="volume">大規模修繕の上記回数の合計金額</label>
+      {{ getTotalPriceLargeConstruction / 100000000 }}億円
+    </div>
+    <div>
+      <label for="volume">大規模修繕費を除いた修繕費の合計金額</label>
+      {{ getTotalPriceWithoutLargeConstruction / 100000000 }}億円
+    </div>
+    <div>
+      <label for="volume">大規模修繕費を除いた毎年の修繕費の金額</label>
+      {{ getYearlyPriceWithoutLargeConstruction / 10000 }}万円
     </div>
   </div>
 </template>
@@ -65,12 +89,12 @@ export default {
     BarChart
   },
   props: {
-    repareDepositMonthlyDefault: String,
+    repareReserveMonthlyDefault: String,
     numberhousesDefault: String,
     outgoIntervalDefault: String,
     constructionPricePerAreaDefault: String,
     roomAreaAveDefault: String,
-    outgoPrice2Default: String,
+    floorsDefault: String,
     firstValueDefault: String
   },
   data () {
@@ -79,32 +103,75 @@ export default {
         responsive: true,
         animation: false,
       },
-      reparedepositmonthly: Number(this.repareDepositMonthlyDefault),       // 0 ~ 500000
+      reparereservemonthly: Number(this.repareReserveMonthlyDefault),       // 0 ~ 500000
       numberhouses: Number(this.numberhousesDefault),       // 2 ~ 2789
       outgointerval: Number(this.outgoIntervalDefault), // 10 ~ 20
       constructionpriceperarea: Number(this.constructionPricePerAreaDefault),
       roomareaave: Number(this.roomAreaAveDefault),
-      outgoprice2: Number(this.outgoPrice2Default),
+      floors: Number(this.floorsDefault),
       firstvalue: Number(this.firstValueDefault),
     }
   },
   computed: {
+    // 毎年の修繕積立金合計
     getIncomeYealy: function() {
-      return this.reparedepositmonthly * 12 * this.numberhouses
+      return this.reparereservemonthly * 12 * this.numberhouses
     },
+    // 分譲延べ床面積
     getRoomAreaTotal: function() {
       return this.roomareaave * this.numberhouses
     },
+    // 建築延べ床面積
     getBuildingAreaTotal: function() {
       return Math.round(this.getRoomAreaTotal / 0.75)
     },
+    // 大規模修繕の金額
     getConstructionPrice: function() {
       return this.getBuildingAreaTotal * this.constructionpriceperarea;
     },
+    // 月額の積立金平均
+    getRepareReserveAve: function() {
+      // ロジック参考
+      // https://www.mlit.go.jp/common/001080837.pdf
+      if (this.floors >= 20) {
+        return 338
+      }
+      if (this.getBuildingAreaTotal < 5000) {
+        return 335
+      }
+      if (this.getBuildingAreaTotal >= 5000 && this.getBuildingAreaTotal < 10000) {
+        return 252
+      }
+      if (this.getBuildingAreaTotal >= 10000 && this.getBuildingAreaTotal < 20000) {
+        return 271
+      }
+      return 255
+    },
+    // 長期修繕計画の合計金額
+    getLongPlanTotalPrice: function() {
+      return this.getRepareReserveAve * 12 * this.getRoomAreaTotal * 38;
+    },
+    // 期間中の大規模修繕の回数
+    getCountLargeConstruction: function() {
+      return Math.ceil(38 / this.outgointerval)
+    },
+    // 大規模修繕の上記回数の合計金額
+    getTotalPriceLargeConstruction: function() {
+      return this.getCountLargeConstruction * this.getConstructionPrice
+    },
+    // 大規模修繕費を除いた修繕費の合計金額
+    getTotalPriceWithoutLargeConstruction: function() {
+      return this.getLongPlanTotalPrice - this.getTotalPriceLargeConstruction
+    },
+    // 大規模修繕費を除いた毎年の修繕費の金額
+    getYearlyPriceWithoutLargeConstruction: function() {
+      return Math.round(this.getTotalPriceWithoutLargeConstruction / 38);
+    },
+    // 年毎の残高
     getYearlyCosts: function () {
       var incomeArray = Lib.getYearlyCostsArray(2022, 2060, this.getIncomeYealy / 1000, 1, 0);
       var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getConstructionPrice / 1000, this.outgointerval, 0);
-      var outgoArray2 = Lib.getYearlyCostsArray(2022, 2060, this.outgoprice2, 1, 0);
+      var outgoArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getYearlyPriceWithoutLargeConstruction / 1000, 1, 0);
       var outgoArray = Lib.getAddedArray(2022, 2060, outgoArray1, outgoArray2);
       var years = Lib.getSubedArray(2022, 2060, incomeArray, outgoArray);
       var balance = Lib.getBalanceArray(2022, 2060, years, this.firstvalue);
