@@ -49,6 +49,11 @@
       {{ outgointerval }}年毎
     </div>
     <div>
+      <label for="volume">次の大規模修繕</label>
+      <input type="range" min="0" max="20" step="1" list="tickmarksNext" v-model.number="nextconstruction">
+      {{ nextconstruction }}年後
+    </div>
+    <div>
       <label for="volume">階数</label>
       <input type="range" min="1" max="60" step="1"  list="tickmarksFloors" v-model.number="floors">
       {{ floors }}階建て
@@ -79,12 +84,12 @@
     </div>
     <div>
       <label for="volume">一時徴収金</label>
-      <input type="range" min="0" max="100000000" step="100000"  list="tickmarksTemporaryMoney" v-model.number="temporarymoney">
+      <input type="range" min="0" max="10000000" step="100000"  list="tickmarksTemporaryMoney" v-model.number="temporarymoney">
       {{ temporarymoney / 10000}}万円/戸
     </div>
     <div>
       <label for="volume">一時徴収金の合計</label>
-      {{ getTotalTemporaryMoney / 10000 }}万円
+      {{ getTotalTemporaryMoney / 100000000 }}億円
     </div>
   </div>
 </template>
@@ -105,7 +110,8 @@ export default {
     roomAreaAveDefault: String,
     floorsDefault: String,
     firstValueDefault: String,
-    temporaryMoneyDefault: String
+    temporaryMoneyDefault: String,
+    nextConstructionDefault: String
   },
   data () {
     return {
@@ -121,6 +127,7 @@ export default {
       floors: Number(this.floorsDefault),
       firstvalue: Number(this.firstValueDefault),
       temporarymoney: Number(this.temporaryMoneyDefault),
+      nextconstruction: Number(this.nextConstructionDefault),
     }
   },
   computed: {
@@ -189,7 +196,7 @@ export default {
       var incomeArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getTotalTemporaryMoney / 1000, 38, 39);
       var incomeArray = Lib.getAddedArray(2022, 2060, incomeArray1, incomeArray2);
       // 支出
-      var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getConstructionPrice / 1000, this.outgointerval, 0);
+      var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getConstructionPrice / 1000, this.outgointerval, this.nextconstruction);
       var outgoArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getYearlyPriceWithoutLargeConstruction / 1000, 1, 0);
       var outgoArray = Lib.getAddedArray(2022, 2060, outgoArray1, outgoArray2);
       // 収支
