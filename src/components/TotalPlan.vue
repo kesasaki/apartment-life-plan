@@ -77,6 +77,15 @@
       <label for="volume">大規模修繕費を除いた毎年の修繕費の金額</label>
       {{ getYearlyPriceWithoutLargeConstruction / 10000 }}万円
     </div>
+    <div>
+      <label for="volume">一時徴収金</label>
+      <input type="range" min="0" max="100000000" step="100000"  list="tickmarksTemporaryMoney" v-model.number="temporarymoney">
+      {{ temporarymoney / 10000}}万円/戸
+    </div>
+    <div>
+      <label for="volume">一時徴収金の合計</label>
+      {{ getTotalTemporaryMoney / 10000 }}万円
+    </div>
   </div>
 </template>
 
@@ -95,7 +104,8 @@ export default {
     constructionPricePerAreaDefault: String,
     roomAreaAveDefault: String,
     floorsDefault: String,
-    firstValueDefault: String
+    firstValueDefault: String,
+    temporaryMoneyDefault: String
   },
   data () {
     return {
@@ -110,6 +120,7 @@ export default {
       roomareaave: Number(this.roomAreaAveDefault),
       floors: Number(this.floorsDefault),
       firstvalue: Number(this.firstValueDefault),
+      temporarymoney: Number(this.temporaryMoneyDefault),
     }
   },
   computed: {
@@ -167,12 +178,21 @@ export default {
     getYearlyPriceWithoutLargeConstruction: function() {
       return Math.round(this.getTotalPriceWithoutLargeConstruction / 38);
     },
+    // 一時徴収金の合計
+    getTotalTemporaryMoney: function() {
+      return this.temporarymoney * this.numberhouses;
+    },
     // 年毎の残高
     getYearlyCosts: function () {
-      var incomeArray = Lib.getYearlyCostsArray(2022, 2060, this.getIncomeYealy / 1000, 1, 0);
+      // 収入
+      var incomeArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getIncomeYealy / 1000, 1, 0);
+      var incomeArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getTotalTemporaryMoney / 1000, 38, 39);
+      var incomeArray = Lib.getAddedArray(2022, 2060, incomeArray1, incomeArray2);
+      // 支出
       var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getConstructionPrice / 1000, this.outgointerval, 0);
       var outgoArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getYearlyPriceWithoutLargeConstruction / 1000, 1, 0);
       var outgoArray = Lib.getAddedArray(2022, 2060, outgoArray1, outgoArray2);
+      // 収支
       var years = Lib.getSubedArray(2022, 2060, incomeArray, outgoArray);
       var balance = Lib.getBalanceArray(2022, 2060, years, this.firstvalue);
       return {
