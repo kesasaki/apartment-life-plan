@@ -1,21 +1,32 @@
 <template>
   <div class="totalPlan">
-    <h1>長期修繕計画 全体像</h1>
+    <h1>長期修繕計画シミュレーター</h1>
     <BarChart :chartData="getYearlyCosts" :chartOptions="dat2" />
-    <div>
-      <label for="volume">初年度の積立金残高</label>
-      <input type="range" min="10000" max="400000" step="10000"  list="firstValue" v-model.number="firstvalue">
-      {{ firstvalue / 100000 }}億円
-    </div>
-    <div>
-      <label for="volume">毎月の修繕積立金</label>
-      <input type="range" min="0" max="50000" step="500" list="tickmarksRepareReserveMonthlye" v-model.number="reparereservemonthly">
-      {{ reparereservemonthly }}円/戸*月
-    </div>
     <div>
       <label for="volume">戸数</label>
       <input type="range" min="2" max="2789" step="1" list="tickmarksNumberHouses" v-model.number="numberhouses">
       {{ numberhouses}}戸
+    </div>
+    <div>
+      <label for="volume">部屋面積の平均</label>
+      <input type="range" min="5" max="200" step="1" list="tickmarksRoomAreaAve" v-model.number="roomareaave">
+      {{ roomareaave }}㎡
+    </div>
+    <div>
+      <label for="volume">階数</label>
+      <input type="range" min="1" max="60" step="1"  list="tickmarksFloors" v-model.number="floors">
+      {{ floors }}階建て
+    </div>
+    <div>
+      <label for="volume">現在の積立金残高</label>
+      <input type="range" min="10000" max="3000000" step="10000"  list="firstValue" v-model.number="firstvalue">
+      {{ firstvalue / 100000 }}億円
+    </div>
+    <br/><br/>
+    <div>
+      <label for="volume">毎月の修繕積立金</label>
+      <input type="range" min="0" max="50000" step="500" list="tickmarksRepareReserveMonthlye" v-model.number="reparereservemonthly">
+      {{ reparereservemonthly }}円/戸*月
     </div>
     <div>
       <label for="volume">毎年の修繕積立金の全戸合計</label>
@@ -27,11 +38,6 @@
       {{ constructionpriceperarea / 10000}}万円/㎡
     </div>
     <div>
-      <label for="volume">部屋面積の平均</label>
-      <input type="range" min="5" max="200" step="1" list="tickmarksRoomAreaAve" v-model.number="roomareaave">
-      {{ roomareaave }}㎡
-    </div>
-    <div>
       <label for="volume">分譲延べ床面積（部屋面積平均 * 戸数）</label>
       {{ getRoomAreaTotal }}㎡
     </div>
@@ -41,22 +47,17 @@
     </div>
     <div>
       <label for="volume">大規模修繕の金額(建物延べ床部屋面積 * 床面積あたりの工事金額)</label>
-      {{ getConstructionPrice / 100000000 }}億円
+      {{ Math.round(getConstructionPrice / 10000000) / 10 }}億円
     </div>
     <div>
       <label for="volume">大規模修繕の間隔</label>
-      <input type="range" min="1" max="30" step="1" list="tickmarksOutgoInterval" v-model.number="outgointerval">
+      <input type="range" min="10" max="20" step="1" list="tickmarksOutgoInterval" v-model.number="outgointerval">
       {{ outgointerval }}年毎
     </div>
     <div>
       <label for="volume">次の大規模修繕</label>
       <input type="range" min="0" max="20" step="1" list="tickmarksNext" v-model.number="nextconstruction">
       {{ nextconstruction }}年後
-    </div>
-    <div>
-      <label for="volume">階数</label>
-      <input type="range" min="1" max="60" step="1"  list="tickmarksFloors" v-model.number="floors">
-      {{ floors }}階建て
     </div>
     <div>
       <label for="volume">毎月の修繕積立金目安(修繕費計算用)</label>
@@ -175,7 +176,8 @@ export default {
     },
     // 期間中の大規模修繕の回数
     getCountLargeConstruction: function() {
-      return Math.ceil(38 / this.outgointerval)
+      //return Math.ceil(38 / this.outgointerval)
+      return 3
     },
     // 大規模修繕の上記回数の合計金額
     getTotalPriceLargeConstruction: function() {
