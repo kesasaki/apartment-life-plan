@@ -1,95 +1,186 @@
 <template>
   <div class="totalPlan">
-    <h1>長期修繕計画 全体像</h1>
-    <BarChart :chartData="getYearlyCosts" :chartOptions="dat2" />
-    <div>
-      <label for="volume">初年度の積立金残高</label>
-      <input type="range" min="10000" max="400000" step="10000"  list="firstValue" v-model.number="firstvalue">
-      {{ firstvalue / 100000 }}億円
+    <div class="totalGraph">
+      <BarChart :chartData="getYearlyCosts" :chartOptions="dat2" />
     </div>
-    <div>
-      <label for="volume">毎月の修繕積立金</label>
-      <input type="range" min="0" max="50000" step="500" list="tickmarksRepareReserveMonthlye" v-model.number="reparereservemonthly">
-      {{ reparereservemonthly }}円/戸*月
+
+    <h2>基本情報</h2>
+    <div class="sliders">
+      <div class="slider">
+        <label class="slider-label" for="slider">戸数</label>
+        <input class="slider-input" type="range" min="2" max="2789" step="1" list="tickmarksNumberHouses"
+          v-model.number="numberhouses">
+        <div class="slider-value"> {{ numberhouses }}戸 </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">部屋面積の平均</label>
+        <input class="slider-input" type="range" min="5" max="200" step="1" list="tickmarksRoomAreaAve"
+          v-model.number="roomareaave">
+        <div class="slider-value"> {{ roomareaave }}㎡ </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">階数</label>
+        <input class="slider-input" type="range" min="1" max="60" step="1" list="tickmarksFloors" v-model.number="floors">
+        <div class="slider-value"> {{ floors }}階建て </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">現在の積立金残高</label>
+        <input class="slider-input" type="range" min="10000" max="3000000" step="10000" list="firstValue"
+          v-model.number="firstvalue">
+        <div class="slider-value"> {{ firstvalue / 100000 }}億円 </div>
+      </div>
     </div>
-    <div>
-      <label for="volume">戸数</label>
-      <input type="range" min="2" max="2789" step="1" list="tickmarksNumberHouses" v-model.number="numberhouses">
-      {{ numberhouses}}戸
+
+    <h2>収入1: 修繕積立金</h2>
+    <div class="sliders">
+
+      <div class="sliders">
+        <div class="slider">
+          <label class="slider-label" for="slider">修繕積立金（各戸毎月）</label>
+          <input class="slider-input" type="range" min="0" max="50000" step="500" list="tickmarksRepareReserveMonthlye"
+            v-model.number="reparereservemonthly">
+          <div class="slider-value"> {{ reparereservemonthly }}円/戸*月 </div>
+        </div>
+        <div class="slider">
+          <label class="slider-label" for="slider">修繕積立金（合計毎年）</label>
+          <div class="slider-input">修繕積立金（各戸毎月）{{ reparereservemonthly }}円 * 12ヶ月 * 戸数（{{ numberhouses }}戸） = </div>
+          <div class="slider-value"> {{ getIncomeYealy / 10000 }}万円/年 </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <label for="volume">毎年の修繕積立金の全戸合計</label>
-      {{ getIncomeYealy / 10000 }}万円/年
+
+    <h2>収入2: 一時徴収金</h2>
+    <div class="sliders">
+
+      <div class="slider">
+        <label class="slider-label" for="slider">一時徴収金</label>
+        <input class="slider-input" type="range" min="0" max="10000000" step="100000" list="tickmarksTemporaryMoney"
+          v-model.number="temporarymoney">
+        <div class="slider-value"> {{ temporarymoney / 10000 }}万円/戸 </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">一時徴収金の合計</label>
+        <div class="slider-input"></div>
+        <div class="slider-value"> {{ getTotalTemporaryMoney / 100000000 }}億円 </div>
+      </div>
     </div>
-    <div>
-      <label for="volume">床面積あたりの工事金額</label>
-      <input type="range" min="3000" max="30000" step="100" list="tickmarksConstructionPricePerArea" v-model.number="constructionpriceperarea">
-      {{ constructionpriceperarea / 10000}}万円/㎡
+
+    <h2>支出1: 大規模修繕工事の費用</h2>
+    <div class="sliders">
+
+      <div class="slider">
+        <label class="slider-label" for="slider">大規模改修の工事金額 / 床面積</label>
+        <input class="slider-input" type="range" min="3000" max="30000" step="100"
+          list="tickmarksConstructionPricePerArea" v-model.number="constructionpriceperarea">
+        <div class="slider-value"> {{ constructionpriceperarea / 10000 }}万円/㎡ </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">大規模修繕の工事金額合計金額</label>
+        <div class="slider-input">
+          <div style="font-size: small"> 大規模改修の工事金額 / 床面積（{{ constructionpriceperarea / 10000 }}万円/㎡） * 建物延べ床面積（{{
+            getBuildingAreaTotal }}㎡）= </div>
+        </div>
+        <div class="slider-value"> {{ Math.round(getConstructionPrice / 10000000) / 10 }}億円 </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">建物延べ床面積</label>
+        <div class="slider-input">分譲延べ床面積（{{ getRoomAreaTotal }}㎡） / 0.75 = </div>
+        <div class="slider-value"> {{ getBuildingAreaTotal }}㎡ </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">分譲延べ床面積</label>
+        <div class="slider-input">部屋面積平均 * 戸数({{ numberhouses }}戸) = </div>
+        <div class="slider-value"> {{ getRoomAreaTotal }}㎡ </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">大規模修繕の間隔</label>
+        <input class="slider-input" type="range" min="10" max="20" step="1" list="tickmarksOutgoInterval"
+          v-model.number="outgointerval">
+        <div class="slider-value"> {{ outgointerval }}年毎 </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">次の大規模修繕</label>
+        <input class="slider-input" type="range" min="0" max="20" step="1" list="tickmarksNext"
+          v-model.number="nextconstruction">
+        <div class="slider-value"> {{ nextconstruction }}年後 </div>
+      </div>
     </div>
-    <div>
-      <label for="volume">部屋面積の平均</label>
-      <input type="range" min="5" max="200" step="1" list="tickmarksRoomAreaAve" v-model.number="roomareaave">
-      {{ roomareaave }}㎡
+
+    <h2>支出2: 小修繕費</h2>
+    <div class="minor-repair-explain-image">
+      <img src="https://longtermrepairplan.s3.ap-northeast-1.amazonaws.com/images/minor_repair3.png">
+      <img src="https://longtermrepairplan.s3.ap-northeast-1.amazonaws.com/images/minor_repair4.png">
     </div>
-    <div>
-      <label for="volume">分譲延べ床面積（部屋面積平均 * 戸数）</label>
-      {{ getRoomAreaTotal }}㎡
-    </div>
-    <div>
-      <label for="volume">建物延べ床部屋面積（分譲延べ床面積 / 0.75）</label>
-      {{ getBuildingAreaTotal }}㎡
-    </div>
-    <div>
-      <label for="volume">大規模修繕の金額(建物延べ床部屋面積 * 床面積あたりの工事金額)</label>
-      {{ getConstructionPrice / 100000000 }}億円
-    </div>
-    <div>
-      <label for="volume">大規模修繕の間隔</label>
-      <input type="range" min="1" max="30" step="1" list="tickmarksOutgoInterval" v-model.number="outgointerval">
-      {{ outgointerval }}年毎
-    </div>
-    <div>
-      <label for="volume">次の大規模修繕</label>
-      <input type="range" min="0" max="20" step="1" list="tickmarksNext" v-model.number="nextconstruction">
-      {{ nextconstruction }}年後
-    </div>
-    <div>
-      <label for="volume">階数</label>
-      <input type="range" min="1" max="60" step="1"  list="tickmarksFloors" v-model.number="floors">
-      {{ floors }}階建て
-    </div>
-    <div>
-      <label for="volume">毎月の修繕積立金目安(修繕費計算用)</label>
-      {{ getRepareReserveAve }}円/㎡*月
-    </div>
-    <div>
-      <label for="volume">長期修繕計画の合計金額</label>
-      {{ getLongPlanTotalPrice / 100000000 }}億円
-    </div>
-    <div>
-      <label for="volume">期間中の大規模修繕の回数</label>
-      {{ getCountLargeConstruction }}回
-    </div>
-    <div>
-      <label for="volume">大規模修繕の上記回数の合計金額</label>
-      {{ getTotalPriceLargeConstruction / 100000000 }}億円
-    </div>
-    <div>
-      <label for="volume">大規模修繕費を除いた修繕費の合計金額</label>
-      {{ getTotalPriceWithoutLargeConstruction / 100000000 }}億円
-    </div>
-    <div>
-      <label for="volume">大規模修繕費を除いた毎年の修繕費の金額</label>
-      {{ getYearlyPriceWithoutLargeConstruction / 10000 }}万円
-    </div>
-    <div>
-      <label for="volume">一時徴収金</label>
-      <input type="range" min="0" max="10000000" step="100000"  list="tickmarksTemporaryMoney" v-model.number="temporarymoney">
-      {{ temporarymoney / 10000}}万円/戸
-    </div>
-    <div>
-      <label for="volume">一時徴収金の合計</label>
-      {{ getTotalTemporaryMoney / 100000000 }}億円
+    <div class="minor-repair-logic">
+
+      <div class="slider">
+        <label class="slider-label" for="slider">小修繕費 / 年</label>
+        <div class="slider-input">
+          <div style="font-size: small"> 小修繕費の全計画期間合計（{{ Math.round(getTotalPriceWithoutLargeConstruction / 1000000) / 100
+          }}億円） /
+            長期計画期間（38年） =</div>
+        </div>
+        <div class="slider-value"> {{ Math.round(getYearlyPriceWithoutLargeConstruction / 10000) }}万円/年 </div>
+      </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">小修繕費の全計画期間合計</label>
+        <div class="slider-input">
+          <div style="font-size: small"> 長期修繕計画の合計金額（{{ Math.round(getLongPlanTotalPrice / 1000000) / 100 }}億円） -
+            大規模修繕工事の平均金額合計（{{
+              Math.round(getTotalPriceLargeConstruction / 1000000) / 100 }}億円） = </div>
+        </div>
+        <div class="slider-value"> {{ Math.round(getTotalPriceWithoutLargeConstruction / 1000000) / 100 }}億円 / 38年 </div>
+      </div>
+      <div class="total-repair-cost-logic">
+        <div class="slider">
+          <label class="slider-label" for="slider">長期修繕計画の合計金額</label>
+          <div class="slider-input">
+            <div style="font-size: small"> 修繕積立金目安（{{ getRepareReserveAve }}円/㎡*月） * 12ヶ月 * 分譲延べ床面積（{{ getRoomAreaTotal
+            }}㎡）
+              * 長期計画期間（38年） = </div>
+          </div>
+          <div class="slider-value"> {{ Math.round(getLongPlanTotalPrice / 1000000) / 100 }}億円 </div>
+        </div>
+        <div class="slider">
+          <label class="slider-label" for="slider">修繕積立金目安</label>
+          <div class="slider-input">
+            <div style="font-size: small"><a
+                href="https://www.s-mankan.com/information/5282/">マンションの修繕積立金に関するガイドライン(2021年（令和3年）9月改訂)(リンク先の「修繕積立金ガイドラインの計算方法」)</a>より以下のため
+              <ul>
+                <li>{{ floors }}階建て</li>
+                <li>建築延べ床面積{{ getBuildingAreaTotal }}㎡</li>
+              </ul>
+            </div>
+          </div>
+          <div class="slider-value"> {{ getRepareReserveAve }}円/㎡*月 </div>
+        </div>
+      </div>
+
+      <div class="total-large-repair-cost-logic">
+        <div class="slider">
+          <label class="slider-label" for="slider">大規模修繕工事の平均金額合計</label>
+          <div class="slider-input">
+            <div style="font-size: small"> 大規模修繕工事の平均金額（{{ Math.round(getConstructionPriceAve / 1000000) / 100 }}億円） *
+              大規模修繕の回数（{{
+                getCountLargeConstruction }}回） = </div>
+          </div>
+          <div class="slider-value"> {{ Math.round(getTotalPriceLargeConstruction / 1000000) / 100 }}億円 </div>
+        </div>
+        <div class="slider">
+          <label class="slider-label" for="slider">大規模修繕工事の平均金額</label>
+          <div class="slider-input">
+            <div style="font-size: small"> 建物延べ床面積（{{ getBuildingAreaTotal }}㎡） * 15000円<br>（<a
+                href="https://www.mlit.go.jp/common/001234283.pdf">令和３年度マンション大規模修繕工事に関する実態調査</a>の「④大規模修繕工事回数と床面積（㎡）あたり工事金額」より）
+            </div>
+          </div>
+          <div class="slider-value"> {{ Math.round(getConstructionPriceAve / 1000000) / 100 }}億円 </div>
+        </div>
+        <div class="slider">
+          <label class="slider-label" for="slider">大規模修繕の回数<div style="font-size: small">(長期計画期間中)</div></label>
+          <div class="slider-input"></div>
+          <div class="slider-value"> {{ getCountLargeConstruction }}回 </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -113,7 +204,7 @@ export default {
     temporaryMoneyDefault: String,
     nextConstructionDefault: String
   },
-  data () {
+  data() {
     return {
       dat2: {
         responsive: true,
@@ -132,29 +223,35 @@ export default {
   },
   computed: {
     // 毎年の修繕積立金合計
-    getIncomeYealy: function() {
+    getIncomeYealy: function () {
       return this.reparereservemonthly * 12 * this.numberhouses
     },
     // 分譲延べ床面積
-    getRoomAreaTotal: function() {
+    getRoomAreaTotal: function () {
       return this.roomareaave * this.numberhouses
     },
     // 建築延べ床面積
-    getBuildingAreaTotal: function() {
+    getBuildingAreaTotal: function () {
       return Math.round(this.getRoomAreaTotal / 0.75)
     },
     // 大規模修繕の金額
-    getConstructionPrice: function() {
+    getConstructionPrice: function () {
       return this.getBuildingAreaTotal * this.constructionpriceperarea;
     },
-    // 大規模修繕の金額の平均値
-    getConstructionPriceAve: function() {
+    // 大規模修繕工事金額の平均値
+    getConstructionPriceAve: function () {
+      // ロジック参考
+      // 令和３年度マンション大規模修繕工事に関する実態調査
+      // https://www.mlit.go.jp/common/001234283.pdf
+      // の「④大規模修繕工事回数と床面積（㎡）あたり工事金額」より
       return this.getBuildingAreaTotal * 15000;
     },
     // 月額の積立金平均
-    getRepareReserveAve: function() {
+    getRepareReserveAve: function () {
       // ロジック参考
-      // https://www.mlit.go.jp/common/001080837.pdf
+      // マンションの修繕積立金に関するガイドライン(2021年（令和3年）9月改訂)
+      // https://www.mlit.go.jp/common/001080837.pdf リンク切れ
+      // https://www.nikkei.com/article/DGXZQOMH211LJ0R21C22A1000000/ 上記内容が引用されている
       if (this.floors >= 20) {
         return 338
       }
@@ -170,27 +267,28 @@ export default {
       return 255
     },
     // 長期修繕計画の合計金額
-    getLongPlanTotalPrice: function() {
+    getLongPlanTotalPrice: function () {
       return this.getRepareReserveAve * 12 * this.getRoomAreaTotal * 38;
     },
     // 期間中の大規模修繕の回数
-    getCountLargeConstruction: function() {
-      return Math.ceil(38 / this.outgointerval)
+    getCountLargeConstruction: function () {
+      //return Math.ceil(38 / this.outgointerval)
+      return 3
     },
     // 大規模修繕の上記回数の合計金額
-    getTotalPriceLargeConstruction: function() {
+    getTotalPriceLargeConstruction: function () {
       return this.getCountLargeConstruction * this.getConstructionPriceAve
     },
     // 大規模修繕費を除いた修繕費の合計金額
-    getTotalPriceWithoutLargeConstruction: function() {
+    getTotalPriceWithoutLargeConstruction: function () {
       return this.getLongPlanTotalPrice - this.getTotalPriceLargeConstruction
     },
     // 大規模修繕費を除いた毎年の修繕費の金額
-    getYearlyPriceWithoutLargeConstruction: function() {
+    getYearlyPriceWithoutLargeConstruction: function () {
       return Math.round(this.getTotalPriceWithoutLargeConstruction / 38);
     },
     // 一時徴収金の合計
-    getTotalTemporaryMoney: function() {
+    getTotalTemporaryMoney: function () {
       return this.temporarymoney * this.numberhouses;
     },
     // 年毎の残高
@@ -208,7 +306,7 @@ export default {
       var balance = Lib.getBalanceArray(2022, 2060, years, this.firstvalue);
       return {
         labels: Lib.getYearsArray(2022, 2060),
-        datasets: [ { data: balance} ]
+        datasets: [{ data: balance }]
       }
     }
   }
@@ -216,22 +314,76 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+h2 {
+  background-color: #fff;
+  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+/* メインコンテンツのスタイル */
+.totalPlan {
+  max-width: 1000px;
+  margin: 0 auto;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+.totalGraph {
+  margin: 0 0 60px 0;
 }
-a {
-  color: #42b983;
+
+.sliders {
+  background-color: #F1ECEB;
+  border-radius: 10px;
+  padding: 20px;
 }
-input[type="range"] {
-  width: 400px;
-  margin: 0;
+
+.slider {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.slider-label {
+  flex: 1;
+  margin-right: 10px;
+  text-align: right;
+}
+
+.slider-input {
+  flex: 2;
+  margin-right: 10px;
+}
+
+.slider-value {
+  flex: 1;
+  text-align: left;
+}
+
+.minor-repair-explain-image img {
+  width: 800px;
+}
+
+.minor-repair-logic {
+  background-color: #F1ECEB;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.total-repair-cost-logic {
+  background-color: #eed4f3;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0;
+}
+
+.total-large-repair-cost-logic {
+  background-color: #caeee0;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0;
 }
 </style>
