@@ -5,6 +5,10 @@
     </div>
 
     <h2>基本情報</h2>
+    <div class="sliders-explain">
+      <p>対象マンションの情報を住宅情報サイトや不動産会社に問い合わせて設定してください。</p>
+      <p><strong>目的が購入前の資金状況の確認の場合はここに入れて上のグラフがマイナスにならなければOK</strong>です。</p>
+    </div>
     <div class="sliders">
       <div class="slider">
         <label class="slider-label" for="slider">戸数</label>
@@ -29,9 +33,24 @@
           v-model.number="firstvalue">
         <div class="slider-value"> {{ firstvalue / 100000 }}億円 </div>
       </div>
+      <div class="slider">
+        <label class="slider-label" for="slider">次の大規模修繕</label>
+        <input class="slider-input" type="range" min="0" max="20" step="1" list="tickmarksNext"
+          v-model.number="nextconstruction">
+        <div class="slider-value"> {{ nextconstruction }}年後 </div>
+      </div>
     </div>
 
-    <h2>収入1: 修繕積立金</h2>
+    <h2>追加情報</h2>
+    <div class="sliders-explain">
+      <p>対象マンションの理事会や管理会社に問合せて設定してください。</p>
+      <p><strong>目的が保有物件の長期計画の確認の時に編集して大規模修繕の間隔判断や積立金を変更した場合の確認、一時徴収金の検討を行います。</strong></p>
+      <p>デフォルトの値は国土交通省調査の平均値、もしくは一般的な値（一時徴収金はしない、など）です。</p>
+    </div>
+    <h3>収入1: 修繕積立金</h3>
+    <div class="sliders-explain">
+      <p>毎月払う修繕積立金です。主な収入源です。</p>
+    </div>
     <div class="sliders">
 
       <div class="sliders">
@@ -49,7 +68,10 @@
       </div>
     </div>
 
-    <h2>収入2: 一時徴収金</h2>
+    <h3>収入2: 一時徴収金</h3>
+    <div class="sliders-explain">
+      <p>資金が足りない時に臨時で住人から徴収するお金です。</p>
+    </div>
     <div class="sliders">
 
       <div class="slider">
@@ -60,12 +82,15 @@
       </div>
       <div class="slider">
         <label class="slider-label" for="slider">一時徴収金の合計</label>
-        <div class="slider-input"></div>
+        <div class="slider-input">一時徴収金（{{ temporarymoney / 10000 }}万円/戸）* {{ numberhouses }}戸 = </div>
         <div class="slider-value"> {{ getTotalTemporaryMoney / 100000000 }}億円 </div>
       </div>
     </div>
 
-    <h2>支出1: 大規模修繕工事の費用</h2>
+    <h3>支出1: 大規模修繕工事の費用</h3>
+    <div class="sliders-explain">
+      <p>大規模修繕工事にかかる費用です。工事額の大小の調整は「大規模改修の工事金額 / 床面積」で行ってください。</p>
+    </div>
     <div class="sliders">
 
       <div class="slider">
@@ -98,15 +123,15 @@
           v-model.number="outgointerval">
         <div class="slider-value"> {{ outgointerval }}年毎 </div>
       </div>
-      <div class="slider">
-        <label class="slider-label" for="slider">次の大規模修繕</label>
-        <input class="slider-input" type="range" min="0" max="20" step="1" list="tickmarksNext"
-          v-model.number="nextconstruction">
-        <div class="slider-value"> {{ nextconstruction }}年後 </div>
-      </div>
     </div>
 
-    <h2>支出2: 小修繕費</h2>
+    <h3>支出2: 小修繕費</h3>
+    <div class="sliders-explain">
+      <p>毎年かかる大規模修繕以外の修繕費です。計算上は修繕金から大規模改修の費用を除いた額です。</p>
+      <p>国交省調査の<a href="https://www.s-mankan.com/information/5282/">修繕積立金の平均額</a>の計画期間合計が
+      <a href="https://www.mlit.go.jp/common/001234283.pdf">同省調査の大規模修繕工事額</a>の合計より明らかに多いため、
+      差額を小修繕費としています。</p>
+    </div>
     <div class="minor-repair-explain-image">
       <img src="https://longtermrepairplan.s3.ap-northeast-1.amazonaws.com/images/minor_repair3.png">
       <img src="https://longtermrepairplan.s3.ap-northeast-1.amazonaws.com/images/minor_repair4.png">
@@ -118,7 +143,7 @@
         <div class="slider-input">
           <div style="font-size: small"> 小修繕費の全計画期間合計（{{ Math.round(getTotalPriceWithoutLargeConstruction / 1000000) / 100
           }}億円） /
-            長期計画期間（38年） =</div>
+            長期計画期間40年） =</div>
         </div>
         <div class="slider-value"> {{ Math.round(getYearlyPriceWithoutLargeConstruction / 10000) }}万円/年 </div>
       </div>
@@ -129,7 +154,7 @@
             大規模修繕工事の平均金額合計（{{
               Math.round(getTotalPriceLargeConstruction / 1000000) / 100 }}億円） = </div>
         </div>
-        <div class="slider-value"> {{ Math.round(getTotalPriceWithoutLargeConstruction / 1000000) / 100 }}億円 / 38年 </div>
+        <div class="slider-value"> {{ Math.round(getTotalPriceWithoutLargeConstruction / 1000000) / 100 }}億円 / 40年 </div>
       </div>
       <div class="total-repair-cost-logic">
         <div class="slider">
@@ -137,15 +162,17 @@
           <div class="slider-input">
             <div style="font-size: small"> 修繕積立金目安（{{ getRepareReserveAve }}円/㎡*月） * 12ヶ月 * 分譲延べ床面積（{{ getRoomAreaTotal
             }}㎡）
-              * 長期計画期間（38年） = </div>
+              * 長期計画期間（40年） = </div>
           </div>
           <div class="slider-value"> {{ Math.round(getLongPlanTotalPrice / 1000000) / 100 }}億円 </div>
         </div>
         <div class="slider">
           <label class="slider-label" for="slider">修繕積立金目安</label>
           <div class="slider-input">
-            <div style="font-size: small"><a
-                href="https://www.s-mankan.com/information/5282/">マンションの修繕積立金に関するガイドライン(2021年（令和3年）9月改訂)(リンク先の「修繕積立金ガイドラインの計算方法」)</a>より以下のため
+            <div style="font-size: small">
+              <a href="https://www.s-mankan.com/information/5282/">
+                マンションの修繕積立金に関するガイドライン(2021年（令和3年）9月改訂)(リンク先の「修繕積立金ガイドラインの計算方法」)
+              </a>より以下のため
               <ul>
                 <li>{{ floors }}階建て</li>
                 <li>建築延べ床面積{{ getBuildingAreaTotal }}㎡</li>
@@ -253,7 +280,7 @@ export default {
       // https://www.mlit.go.jp/common/001080837.pdf リンク切れ
       // https://www.nikkei.com/article/DGXZQOMH211LJ0R21C22A1000000/ 上記内容が引用されている
       if (this.floors >= 20) {
-        return 338
+        return 340
       }
       if (this.getBuildingAreaTotal < 5000) {
         return 335
@@ -268,11 +295,11 @@ export default {
     },
     // 長期修繕計画の合計金額
     getLongPlanTotalPrice: function () {
-      return this.getRepareReserveAve * 12 * this.getRoomAreaTotal * 38;
+      return this.getRepareReserveAve * 12 * this.getRoomAreaTotal * 40;
     },
     // 期間中の大規模修繕の回数
     getCountLargeConstruction: function () {
-      //return Math.ceil(38 / this.outgointerval)
+      //return Math.ceil(40 / this.outgointerval)
       return 3
     },
     // 大規模修繕の上記回数の合計金額
@@ -285,7 +312,7 @@ export default {
     },
     // 大規模修繕費を除いた毎年の修繕費の金額
     getYearlyPriceWithoutLargeConstruction: function () {
-      return Math.round(this.getTotalPriceWithoutLargeConstruction / 38);
+      return Math.round(this.getTotalPriceWithoutLargeConstruction / 40);
     },
     // 一時徴収金の合計
     getTotalTemporaryMoney: function () {
@@ -295,7 +322,7 @@ export default {
     getYearlyCosts: function () {
       // 収入
       var incomeArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getIncomeYealy / 1000, 1, 0);
-      var incomeArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getTotalTemporaryMoney / 1000, 38, 39);
+      var incomeArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getTotalTemporaryMoney / 1000, 40, 41);
       var incomeArray = Lib.getAddedArray(2022, 2060, incomeArray1, incomeArray2);
       // 支出
       var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getConstructionPrice / 1000, this.outgointerval, this.nextconstruction);
@@ -319,8 +346,17 @@ h2 {
   color: #333;
   font-size: 24px;
   font-weight: 700;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 20px;
+}
+
+h3 {
+  background-color: #fff;
+  color: #333;
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* メインコンテンツのスタイル */
@@ -331,6 +367,12 @@ h2 {
 
 .totalGraph {
   margin: 0 0 60px 0;
+}
+.sliders-explain {
+  max-width: 1000px;
+  margin: 10px auto;
+  color: #333;
+  font-size: 15px;
 }
 
 .sliders {
@@ -356,6 +398,11 @@ h2 {
 .slider-input {
   flex: 2;
   margin-right: 10px;
+}
+
+.slider-input ul {
+  list-style-position: inside;
+  margin-left: 10px;
 }
 
 .slider-value {
