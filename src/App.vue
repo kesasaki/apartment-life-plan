@@ -1,4 +1,6 @@
 <template>
+  <SiteHeader/>
+  <ContentsHeader/>
   <TotalPlan
     repareReserveMonthlyDefault="19000"
     numberhousesDefault="130"
@@ -10,10 +12,10 @@
     temporaryMoneyDefault="0"
     nextConstructionDefault="2"
   />
+  <!--
   <ItemPlan itemName="修繕積立金 / 年" defaultPrice="29000" defaultInterval="1" defaultPrev="0" />
   <ItemPlan itemName="大規模修繕" defaultPrice="200000" defaultInterval="15" defaultPrev="0" />
   <ItemPlan itemName="大規模修繕以外の積立金利用" defaultPrice="19000" defaultInterval="1" defaultPrev="0" />
-  <!--
   <ItemPlan itemName="仮設工事"/>
   <ItemPlan itemName="屋上防水"/>
   <ItemPlan itemName="床防水"/>
@@ -37,13 +39,15 @@
 </template>
 
 <script>
-import ItemPlan from './components/ItemPlan.vue'
+import SiteHeader from './components/SiteHeader.vue'
+import ContentsHeader from './components/ContentsHeader.vue'
 import TotalPlan from './components/TotalPlan.vue'
 
 export default {
   name: 'App',
   components: {
-    ItemPlan,
+    SiteHeader,
+    ContentsHeader,
     TotalPlan
   }
 
@@ -55,8 +59,19 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base styles */
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
 }
 </style>
