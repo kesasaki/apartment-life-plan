@@ -411,7 +411,8 @@ h3 {
 }
 
 .minor-repair-explain-image img {
-  width: 800px;
+  max-width: 100%;
+  height: auto;
 }
 
 .minor-repair-logic {
