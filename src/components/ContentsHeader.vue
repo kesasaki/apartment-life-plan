@@ -20,19 +20,22 @@
   background-color: #fff;
   color: #333;
   text-align: center;
-  padding: 60px 0;
+  padding: 20px 0;
 }
 
 h1 {
-  font-size: 36px;
+  font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 10px;
 }
 
 .header-explain {
-  max-width: 1000px;
-  margin: 10px auto;
+  max-width:900px;
+  margin: 0 auto;
   color: #333;
+}
+.header-explain p {
+  margin: 0 10px;
 }
 
 </style>
