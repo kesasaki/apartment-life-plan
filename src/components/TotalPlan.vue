@@ -12,6 +12,7 @@
         -->
         </div>
       </div>
+      <CopyButton />
 
       <h2>基本項目（物件購入前の資金状況確認用）</h2>
       <div class="sliders-explain">
@@ -225,12 +226,14 @@
 
 <script>
 import BarChart from './BarChart.vue';
+import CopyButton from './CopyButton.vue';
 import Lib from '../lib/lib.js';
 
 export default {
   name: 'totalPlan',
   components: {
-    BarChart
+    BarChart,
+    CopyButton
   },
   props: {
     repareReserveMonthlyDefault: String,
@@ -263,31 +266,31 @@ export default {
   watch: {
     // dataの値が変更されたときにURLパラメータを更新
     reparereservemonthly(newVal) {
-      this.$router.replace({ query: { rsm: newVal } });
+      this.$router.replace({ query: { rsm: newVal, nh: this.numberhouses, oi: this.outgointerval, cppa: this.constructionpriceperarea, raa: this.roomareaave, f: this.floors, fv: this.firstvalue, tm: this.temporarymoney, nc: this.nextconstruction } });
     },
     numberhouses(newVal) {
-      this.$router.replace({ query: { nh: newVal } });
+      this.$router.replace({ query: { rsm: this.reparereservemonthly, nh: newVal, oi: this.outgointerval, cppa: this.constructionpriceperarea, raa: this.roomareaave, f: this.floors, fv: this.firstvalue, tm: this.temporarymoney, nc: this.nextconstruction } });
     },
     outgointerval(newVal) {
-      this.$router.replace({ query: { oi: newVal } });
+      this.$router.replace({ query: { rsm: this.reparereservemonthly, nh: this.numberhouses, oi: newVal, cppa: this.constructionpriceperarea, raa: this.roomareaave, f: this.floors, fv: this.firstvalue, tm: this.temporarymoney, nc: this.nextconstruction } });
     },
     constructionpriceperarea(newVal) {
-      this.$router.replace({ query: { cppa: newVal } });
+      this.$router.replace({ query: { rsm: this.reparereservemonthly, nh: this.numberhouses, oi: this.outgointerval, cppa: newVal, raa: this.roomareaave, f: this.floors, fv: this.firstvalue, tm: this.temporarymoney, nc: this.nextconstruction } });
     },
     roomareaave(newVal) {
-      this.$router.replace({ query: { raa: newVal } });
+      this.$router.replace({ query: { rsm: this.reparereservemonthly, nh: this.numberhouses, oi: this.outgointerval, cppa: this.constructionpriceperarea, raa: newVal, f: this.floors, fv: this.firstvalue, tm: this.temporarymoney, nc: this.nextconstruction } });
     },
     floors(newVal) {
-      this.$router.replace({ query: { f: newVal } });
+      this.$router.replace({ query: { rsm: this.reparereservemonthly, nh: this.numberhouses, oi: this.outgointerval, cppa: this.constructionpriceperarea, raa: this.roomareaave, f: newVal, fv: this.firstvalue, tm: this.temporarymoney, nc: this.nextconstruction } });
     },
     firstvalue(newVal) {
-      this.$router.replace({ query: { fv: newVal } });
+      this.$router.replace({ query: { rsm: this.reparereservemonthly, nh: this.numberhouses, oi: this.outgointerval, cppa: this.constructionpriceperarea, raa: this.roomareaave, f: this.floors, fv: newVal, tm: this.temporarymoney, nc: this.nextconstruction } });
     },
     temporarymoney(newVal) {
-      this.$router.replace({ query: { tm: newVal } });
+      this.$router.replace({ query: { rsm: this.reparereservemonthly, nh: this.numberhouses, oi: this.outgointerval, cppa: this.constructionpriceperarea, raa: this.roomareaave, f: this.floors, fv: this.firstvalue, tm: newVal, nc: this.nextconstruction } });
     },
     nextconstruction(newVal) {
-      this.$router.replace({ query: { nc: newVal } });
+      this.$router.replace({ query: { rsm: this.reparereservemonthly, nh: this.numberhouses, oi: this.outgointerval, cppa: this.constructionpriceperarea, raa: this.roomareaave, f: this.floors, fv: this.firstvalue, tm: this.temporarymoney, nc: newVal } });
     },
     // URLパラメータからdataの初期値を設定
     $route: {
@@ -396,18 +399,18 @@ export default {
     // 年毎の残高
     getYearlyCosts: function () {
       // 収入
-      var incomeArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getIncomeYealy / 1000, 1, 0);
-      var incomeArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getTotalTemporaryMoney / 1000, 40, 41);
-      var incomeArray = Lib.getAddedArray(2022, 2060, incomeArray1, incomeArray2);
+      var incomeArray1 = Lib.getYearlyCostsArray(2022, 2062, this.getIncomeYealy / 1000, 1, 0);
+      var incomeArray2 = Lib.getYearlyCostsArray(2022, 2062, this.getTotalTemporaryMoney / 1000, 40, 38);
+      var incomeArray = Lib.getAddedArray(2022, 2062, incomeArray1, incomeArray2);
       // 支出
-      var outgoArray1 = Lib.getYearlyCostsArray(2022, 2060, this.getConstructionPrice / 1000, this.outgointerval, this.nextconstruction);
-      var outgoArray2 = Lib.getYearlyCostsArray(2022, 2060, this.getYearlyPriceWithoutLargeConstruction / 1000, 1, 0);
-      var outgoArray = Lib.getAddedArray(2022, 2060, outgoArray1, outgoArray2);
+      var outgoArray1 = Lib.getYearlyCostsArray(2022, 2062, this.getConstructionPrice / 1000, this.outgointerval, this.nextconstruction);
+      var outgoArray2 = Lib.getYearlyCostsArray(2022, 2062, this.getYearlyPriceWithoutLargeConstruction / 1000, 1, 0);
+      var outgoArray = Lib.getAddedArray(2022, 2062, outgoArray1, outgoArray2);
       // 収支
-      var years = Lib.getSubedArray(2022, 2060, incomeArray, outgoArray);
-      var balance = Lib.getBalanceArray(2022, 2060, years, this.firstvalue);
+      var years = Lib.getSubedArray(2022, 2062, incomeArray, outgoArray);
+      var balance = Lib.getBalanceArray(2022, 2062, years, this.firstvalue);
       return {
-        labels: Lib.getYearsArray(2022, 2060),
+        labels: Lib.getYearsArray(2022, 2062),
         datasets: [{ data: balance }]
       }
     }
@@ -447,6 +450,7 @@ h3 {
 .totalGraph {
   margin: 0 0 30px 0;
 }
+
 .totalGraphBody {
   max-width: 1000px;
   margin: 0 auto;

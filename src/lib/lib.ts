@@ -96,7 +96,7 @@ function getBalanceArray(start: number, end: number, costArr: number[], firstVal
     let span = end - start
     years.push(firstValue);
     for (let i = 1; i <= span; i++) {
-        years.push(years[i - 1] + costArr[i]);
+        years.push(Number(years[i - 1]) + Number(costArr[i]));
     }
     return years
 }
