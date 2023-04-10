@@ -215,6 +215,7 @@
 <script>
 import BarChart from './BarChart.vue';
 import Lib from '../lib/lib.js';
+
 export default {
   name: 'totalPlan',
   components: {
@@ -237,15 +238,78 @@ export default {
         responsive: true,
         animation: false,
       },
-      reparereservemonthly: Number(this.repareReserveMonthlyDefault),       // 0 ~ 500000
-      numberhouses: Number(this.numberhousesDefault),       // 2 ~ 2789
-      outgointerval: Number(this.outgoIntervalDefault), // 10 ~ 20
-      constructionpriceperarea: Number(this.constructionPricePerAreaDefault),
-      roomareaave: Number(this.roomAreaAveDefault),
-      floors: Number(this.floorsDefault),
-      firstvalue: Number(this.firstValueDefault),
-      temporarymoney: Number(this.temporaryMoneyDefault),
-      nextconstruction: Number(this.nextConstructionDefault),
+      reparereservemonthly: Number(this.repareReserveMonthlyDefault), // 修繕積立金（各戸毎月） 0 ~ 500000
+      numberhouses: Number(this.numberhousesDefault),       // 戸数 2 ~ 2789
+      outgointerval: Number(this.outgoIntervalDefault), // 大規模修繕の間隔 10 ~ 20
+      constructionpriceperarea: Number(this.constructionPricePerAreaDefault), // 大規模改修の工事金額 / 床面積
+      roomareaave: Number(this.roomAreaAveDefault), // 部屋面積の平均
+      floors: Number(this.floorsDefault), // 階数
+      firstvalue: Number(this.firstValueDefault), // 現在の積立金残高
+      temporarymoney: Number(this.temporaryMoneyDefault), // 一時徴収金
+      nextconstruction: Number(this.nextConstructionDefault), // 次の大規模修繕
+    }
+  },
+  watch: {
+    // dataの値が変更されたときにURLパラメータを更新
+    reparereservemonthly(newVal) {
+      this.$router.replace({ query: { rsm: newVal } });
+    },
+    numberhouses(newVal) {
+      this.$router.replace({ query: { nh: newVal } });
+    },
+    outgointerval(newVal) {
+      this.$router.replace({ query: { oi: newVal } });
+    },
+    constructionpriceperarea(newVal) {
+      this.$router.replace({ query: { cppa: newVal } });
+    },
+    roomareaave(newVal) {
+      this.$router.replace({ query: { raa: newVal } });
+    },
+    floors(newVal) {
+      this.$router.replace({ query: { f: newVal } });
+    },
+    firstvalue(newVal) {
+      this.$router.replace({ query: { fv: newVal } });
+    },
+    temporarymoney(newVal) {
+      this.$router.replace({ query: { tm: newVal } });
+    },
+    nextconstruction(newVal) {
+      this.$router.replace({ query: { nc: newVal } });
+    },
+    // URLパラメータからdataの初期値を設定
+    $route: {
+      immediate: true, // マウント時にも設定
+      handler() {
+        if (this.$route.query.rsm) {
+          this.reparereservemonthly = this.$route.query.rsm;
+        }
+        if (this.$route.query.nh) {
+          this.numberhouses = this.$route.query.nh;
+        }
+        if (this.$route.query.oi) {
+          this.outgointerval = this.$route.query.oi;
+        }
+        if (this.$route.query.cppa) {
+          this.constructionpriceperarea = this.$route.query.cppa;
+        }
+        if (this.$route.query.raa) {
+          this.roomareaave = this.$route.query.raa;
+        }
+        if (this.$route.query.f) {
+          this.floors = this.$route.query.f;
+        }
+        if (this.$route.query.fv) {
+          this.firstvalue = this.$route.query.fv;
+        }
+        if (this.$route.query.tm) {
+          this.temporarymoney = this.$route.query.tm;
+        }
+        if (this.$route.query.nc) {
+          this.nextconstruction = this.$route.query.nc;
+        }
+      }
     }
   },
   computed: {
