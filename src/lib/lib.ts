@@ -115,8 +115,12 @@ function getColorArray(start: number, end: number, barance: number[]): string[] 
     }
     let colors: string[] = [];
     let span = end - start
+    let good: string = '#56B7AB'; // 基本は緑
+    if (!this.isAllGreen(start, end, barance)) {
+        good = '#ccc'; // 赤字があるときは灰色
+    }
     for (let i = 0; i <= span; i++) {
-        let color: string = '#56B7AB'; // 基本は緑
+        let color: string = good;
         if (barance[i] < 0) {
             color = '#F4527D' // 0以下があれば赤
         }

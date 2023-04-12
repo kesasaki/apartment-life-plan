@@ -112,8 +112,12 @@ function getColorArray(start, end, barance) {
     }
     var colors = [];
     var span = end - start;
+    var good = '#56B7AB'; // 基本は緑
+    if (!this.isAllGreen(start, end, barance)) {
+        good = '#ccc'; // 赤字があるときは灰色
+    }
     for (var i = 0; i <= span; i++) {
-        var color = '#56B7AB'; // 基本は緑
+        var color = good;
         if (barance[i] < 0) {
             color = '#F4527D'; // 0以下があれば赤
         }
