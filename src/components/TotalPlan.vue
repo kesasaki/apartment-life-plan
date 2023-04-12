@@ -4,12 +4,16 @@
       <div class="totalGraph">
         <div class="totalGraphBody">
           <BarChart :chartData="getYearlyCosts" :chartOptions="dat2" />
-          <!--
-        <p>グラフがマイナスにならなければ計画に問題はありません</p>
-        <p>グラフがマイナスであれば資金が足りなくなり長期的な修繕が行えない可能性があります。</p>
-        <p>購入前の場合は不動産会社に問合せ、修繕計画の確認を行ってください。</p>
-        <p>保有マンションの場合は大規模修繕の間隔や積立金の変更、一時徴収金の検討を行います。</p>
-        -->
+        </div>
+        <div class="totalGraphJudge">
+          <div class="isAllGreen" v-if="isAllGreen">
+            <p>この物件・資金状況に問題はありません</p>
+          </div>
+          <div class="hasRed" v-if="!isAllGreen">
+            <p>資金が足りないため、長期的な修繕が行えない可能性があります。</p>
+            <p>購入は控えた方が良いでしょう。</p>
+            <p>保有マンションの場合は大規模修繕の間隔を長くする、積立金の値上げ、一時徴収金の徴収を検討してください。</p>
+          </div>
         </div>
       </div>
       <CopyButton />
@@ -396,23 +400,35 @@ export default {
     getTotalTemporaryMoney: function () {
       return this.temporarymoney * this.numberhouses;
     },
-    // 年毎の残高
-    getYearlyCosts: function () {
-      // 収入
+    // 収支を計算
+    getBalance: function () {
+      // 収入を計算
       var incomeArray1 = Lib.getYearlyCostsArray(2022, 2062, this.getIncomeYealy / 1000, 1, 0);
       var incomeArray2 = Lib.getYearlyCostsArray(2022, 2062, this.getTotalTemporaryMoney / 1000, 40, 38);
       var incomeArray = Lib.getAddedArray(2022, 2062, incomeArray1, incomeArray2);
-      // 支出
+      // 支出を計算
       var outgoArray1 = Lib.getYearlyCostsArray(2022, 2062, this.getConstructionPrice / 1000, this.outgointerval, this.nextconstruction);
       var outgoArray2 = Lib.getYearlyCostsArray(2022, 2062, this.getYearlyPriceWithoutLargeConstruction / 1000, 1, 0);
       var outgoArray = Lib.getAddedArray(2022, 2062, outgoArray1, outgoArray2);
-      // 収支
+      // 収支を計算
       var years = Lib.getSubedArray(2022, 2062, incomeArray, outgoArray);
-      var balance = Lib.getBalanceArray(2022, 2062, years, this.firstvalue);
+      return Lib.getBalanceArray(2022, 2062, years, this.firstvalue);
+    },
+    // グラフへの入力を作成
+    getYearlyCosts: function () {
+      var balance = this.getBalance
       return {
         labels: Lib.getYearsArray(2022, 2062),
-        datasets: [{ data: balance }]
+        datasets: [{
+          label: '積立金の残高（千円）',
+          data: balance,
+          backgroundColor: Lib.getColorArray(2022, 2062, balance)
+        }]
       }
+    },
+    // 赤字の有無を確認
+    isAllGreen: function () {
+      return Lib.isAllGreen(2022, 2062, this.getBalance);
     }
   }
 }
@@ -454,6 +470,19 @@ h3 {
 .totalGraphBody {
   max-width: 1000px;
   margin: 0 auto;
+}
+
+.totalGraphJudge {
+  text-align: center;
+  font-weight: bold;
+}
+
+.totalGraphJudge .isAllGreen {
+  color: #56B7AB;
+}
+
+.totalGraphJudge .hasRed {
+  color: #F4527D;
 }
 
 .sliders-explain {
