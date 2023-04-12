@@ -98,11 +98,56 @@ function getBalanceArray(start, end, costArr, firstValue) {
     }
     return years;
 }
+/**
+ * 残高推移から表の色を取得する
+ *
+ * @param start 開始年
+ * @param end 終了年
+ * @param barance 残高推移
+ * @returns
+ */
+function getColorArray(start, end, barance) {
+    if (start > end) {
+        return [];
+    }
+    var colors = [];
+    var span = end - start;
+    for (var i = 0; i <= span; i++) {
+        var color = '#56B7AB'; // 基本は緑
+        if (barance[i] < 0) {
+            color = '#F4527D'; // 0以下があれば赤
+        }
+        colors.push(color);
+    }
+    return colors;
+}
+/**
+ * 残高推移から赤字があるかを取得する
+ *
+ * @param start 開始年
+ * @param end 終了年
+ * @param barance 残高推移
+ * @returns
+ */
+function isAllGreen(start, end, barance) {
+    if (start > end) {
+        return true;
+    }
+    var span = end - start;
+    for (var i = 0; i <= span; i++) {
+        if (barance[i] < 0) {
+            return false;
+        }
+    }
+    return true;
+}
 // 関数をエクスポートします。
 exports["default"] = {
     getYearsArray: getYearsArray,
     getYearlyCostsArray: getYearlyCostsArray,
     getAddedArray: getAddedArray,
     getSubedArray: getSubedArray,
-    getBalanceArray: getBalanceArray
+    getBalanceArray: getBalanceArray,
+    getColorArray: getColorArray,
+    isAllGreen: isAllGreen
 };
