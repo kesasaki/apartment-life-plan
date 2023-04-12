@@ -1,10 +1,10 @@
 <template>
   <div class="buttons">
     <div class="copyButton">
-      <button @click="copyUrlToClipboard">URLをコピー</button>
+      <button class="copy" @click="copyUrlToClipboard">結果をシェア</button>
     </div>
     <div class="clearButton">
-      <button @click="clearParams">初期化</button>
+      <button class="clear" @click="clearParams">クリア</button>
     </div>
   </div>
 </template>
@@ -47,17 +47,29 @@ export default {
 }
 
 button {
-  background-color: #98c0ff;
-  color: #111;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  color: #111;
 }
 
-button:hover {
+.copy {
+  background-color: #98c0ff;
+}
+
+.clear {
+  background-color: #FFCDD2;
+}
+
+.copy:hover {
   color: #fff;
   background-color: #0069d9;
+}
+
+.clear:hover {
+  color: #fff;
+  background-color: #F4527D;
 }
 </style>
