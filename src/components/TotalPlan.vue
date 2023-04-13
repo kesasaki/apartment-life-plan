@@ -20,7 +20,7 @@
 
       <div class="sliders-wrapper">
         <div class="sliders-column">
-          <h2>基本項目（物件購入前の資金状況確認用）</h2>
+          <h2>基本項目<small>（積立額の確認用）</small></h2>
           <div class="sliders-explain">
             <p>住宅情報サイトや不動産会社への聞き取りから入力してください。</p>
           </div>
@@ -56,12 +56,12 @@
               <div class="slider-value"> {{ nextconstruction }}年後 </div>
             </div>
           </div>
-
         </div>
+
         <div class="sliders-column">
-          <h2>追加項目（保有物件の長期計画確認用）</h2>
+          <h2>追加項目<small>（計画の確認用）</small></h2>
           <div class="sliders-explain">
-            <p>理事会や管理会社に確認して入力してください。デフォルトの値は国土交通省調査の平均値、一般的な値（一時徴収金はしない、など）です。</p>
+            <p>理事会や管理会社に確認して入力してください。</p>
           </div>
           <div class="sliders">
             <div class="slider">
@@ -71,10 +71,20 @@
               <div class="slider-value"> {{ temporarymoney / 10000 }}万円/戸 </div>
             </div>
             <div class="slider">
+              <label class="slider-label" for="slider"></label>
+              <div class="slider-input">合計</div>
+              <div class="slider-value"> {{ getTotalTemporaryMoney / 100000000 }}億円 </div>
+            </div>
+            <div class="slider">
               <label class="slider-label" for="slider">修繕積立金</label>
               <input class="slider-input" type="range" min="0" max="50000" step="500"
                 list="tickmarksRepareReserveMonthlye" v-model.number="reparereservemonthly">
               <div class="slider-value"> {{ reparereservemonthly }}円/戸*月 </div>
+            </div>
+            <div class="slider">
+              <label class="slider-label" for="slider"></label>
+              <div class="slider-input">合計</div>
+              <div class="slider-value"> {{ getIncomeYealy / 10000 }}万円/年 </div>
             </div>
             <div class="slider">
               <label class="slider-label" for="slider">大規模修繕の金額</label>
@@ -83,11 +93,21 @@
               <div class="slider-value"> {{ constructionpriceperarea / 10000 }}万円/㎡ </div>
             </div>
             <div class="slider">
+              <label class="slider-label" for="slider"></label>
+              <div class="slider-input">合計</div>
+              <div class="slider-value"> {{ Math.round(getConstructionPrice / 10000000) / 10 }}億円 </div>
+            </div>
+            <div class="slider">
               <label class="slider-label" for="slider">大規模修繕の間隔</label>
               <input class="slider-input" type="range" min="10" max="20" step="1" list="tickmarksOutgoInterval"
                 v-model.number="outgointerval">
               <div class="slider-value"> {{ outgointerval }}年毎 </div>
             </div>
+          </div>
+          <div class="sliders-explain">
+            <p>一時徴収金以外のデフォルトは平均値（<a href="https://www.s-mankan.com/information/5282/">※1</a>,
+              <a href="https://www.mlit.go.jp/common/001234283.pdf">※2</a>）です。
+            </p>
           </div>
         </div>
       </div>
@@ -108,7 +128,6 @@
         <p>毎月払う修繕積立金です。主な収入源です。</p>
       </div>
       <div class="sliders">
-
         <div class="sliders">
           <div class="slider">
             <label class="slider-label" for="slider">修繕積立金（合計毎年）</label>
@@ -122,7 +141,6 @@
         <p>大規模修繕工事にかかる費用です。工事額の大小の調整は「大規模改修の工事金額 / 床面積」で行ってください。</p>
       </div>
       <div class="sliders">
-
         <div class="slider">
           <label class="slider-label" for="slider">大規模修繕の工事金額合計金額</label>
           <div class="slider-input">
@@ -534,6 +552,7 @@ h3 {
 .slider-input {
   flex: 2;
   margin-right: 10px;
+  text-align: right;
 }
 
 .slider-input ul {
