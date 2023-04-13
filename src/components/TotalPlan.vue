@@ -64,27 +64,12 @@
             <p>理事会や管理会社に確認して入力してください。</p>
           </div>
           <div class="sliders">
+
             <div class="slider">
-              <label class="slider-label" for="slider">一時徴収金</label>
-              <input class="slider-input" type="range" min="0" max="10000000" step="100000" list="tickmarksTemporaryMoney"
-                v-model.number="temporarymoney">
-              <div class="slider-value"> {{ temporarymoney / 10000 }}万円/戸 </div>
-            </div>
-            <div class="slider">
-              <label class="slider-label" for="slider"></label>
-              <div class="slider-input">合計</div>
-              <div class="slider-value"> {{ getTotalTemporaryMoney / 100000000 }}億円 </div>
-            </div>
-            <div class="slider">
-              <label class="slider-label" for="slider">修繕積立金</label>
-              <input class="slider-input" type="range" min="0" max="50000" step="500"
-                list="tickmarksRepareReserveMonthlye" v-model.number="reparereservemonthly">
-              <div class="slider-value"> {{ reparereservemonthly }}円/戸*月 </div>
-            </div>
-            <div class="slider">
-              <label class="slider-label" for="slider"></label>
-              <div class="slider-input">合計</div>
-              <div class="slider-value"> {{ getIncomeYealy / 10000 }}万円/年 </div>
+              <label class="slider-label" for="slider">大規模修繕の間隔</label>
+              <input class="slider-input" type="range" min="10" max="20" step="1" list="tickmarksOutgoInterval"
+                v-model.number="outgointerval">
+              <div class="slider-value"> {{ outgointerval }}年毎 </div>
             </div>
             <div class="slider">
               <label class="slider-label" for="slider">大規模修繕の金額</label>
@@ -98,10 +83,26 @@
               <div class="slider-value"> {{ Math.round(getConstructionPrice / 10000000) / 10 }}億円 </div>
             </div>
             <div class="slider">
-              <label class="slider-label" for="slider">大規模修繕の間隔</label>
-              <input class="slider-input" type="range" min="10" max="20" step="1" list="tickmarksOutgoInterval"
-                v-model.number="outgointerval">
-              <div class="slider-value"> {{ outgointerval }}年毎 </div>
+              <label class="slider-label" for="slider">修繕積立金</label>
+              <input class="slider-input" type="range" min="0" max="50000" step="500"
+                list="tickmarksRepareReserveMonthlye" v-model.number="reparereservemonthly">
+              <div class="slider-value"> {{ reparereservemonthly }}円/戸*月 </div>
+            </div>
+            <div class="slider">
+              <label class="slider-label" for="slider"></label>
+              <div class="slider-input">合計</div>
+              <div class="slider-value"> {{ getIncomeYealy / 10000 }}万円/年 </div>
+            </div>
+            <div class="slider">
+              <label class="slider-label" for="slider">一時徴収金</label>
+              <input class="slider-input" type="range" min="0" max="10000000" step="100000" list="tickmarksTemporaryMoney"
+                v-model.number="temporarymoney">
+              <div class="slider-value"> {{ temporarymoney / 10000 }}万円/戸 </div>
+            </div>
+            <div class="slider">
+              <label class="slider-label" for="slider"></label>
+              <div class="slider-input">合計</div>
+              <div class="slider-value"> {{ getTotalTemporaryMoney / 100000000 }}億円 </div>
             </div>
           </div>
           <div class="sliders-explain">
